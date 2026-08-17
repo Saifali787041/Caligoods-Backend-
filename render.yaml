@@ -1,0 +1,42 @@
+# Render Blueprint for the Caligoods backend.
+# In Render: New > Blueprint, point it at this repo (root = this folder).
+# Fill the secret env vars (marked sync:false) in the dashboard after it's created.
+services:
+  - type: web
+    name: caligoods-api
+    runtime: node
+    plan: free
+    # If this folder is the repo root, leave rootDir out. If the backend lives in
+    # a subfolder of a monorepo, set: rootDir: Caligoods-Backend
+    buildCommand: npm ci
+    # Pre-deploy creates missing tables + seeds roles on Supabase (idempotent,
+    # never alters/destroys). REQUIRED because the server does not auto-create
+    # tables in production.
+    preDeployCommand: npm run db:init
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_URL
+        sync: false     # e.g. https://caligoods-api.onrender.com
+      - key: CLIENT_URL
+        sync: false     # comma-separated Vercel origins, no trailing slash
+      - key: DATABASE_URL
+        sync: false     # Supabase SESSION pooler string (port 5432)
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ZOHO_CLIENT_ID
+        sync: false
+      - key: ZOHO_CLIENT_SECRET
+        sync: false
+      - key: ZOHO_REFRESH_TOKEN
+        sync: false
+      - key: ZOHO_ORGANIZATION_ID
+        sync: false
+      - key: ZOHO_ACCOUNTS_URL
+        value: https://accounts.zoho.com
+      - key: ZOHO_API_DOMAIN
+        value: https://www.zohoapis.com

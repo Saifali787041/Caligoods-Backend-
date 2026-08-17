@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+logs/*
+!logs/.gitkeep
+src/uploads/*
+!src/uploads/.gitkeep
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Local Zoho credentials (never commit real secrets)
+src/config/zoho.config.js

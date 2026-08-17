@@ -7,6 +7,10 @@ const apiLimiter = rateLimit({
   max: env.RATE_LIMIT_MAX,
   standardHeaders: true,
   legacyHeaders: false,
+  // The public storefront pulls the whole catalog plus many product images on
+  // every page load, so exempt those read-only GETs from the limiter (otherwise
+  // a couple of refreshes trip "Too many requests"). Writes/auth stay limited.
+  skip: (req) => req.method === 'GET' && /\/catalog(\/|$|\?)/.test(req.originalUrl || req.url),
   message: { success: false, message: 'Too many requests, please try again later.' },
 });
 

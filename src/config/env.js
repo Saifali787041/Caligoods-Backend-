@@ -47,7 +47,7 @@ const envSchema = z.object({
   SMTP_FROM: z.string().default('Caligoods <no-reply@caligoodsinc.com>'),
 
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(15 * 60 * 1000),
-  RATE_LIMIT_MAX: z.coerce.number().default(100),
+  RATE_LIMIT_MAX: z.coerce.number().default(1000),
 
   // Zoho (Phase 2+). Optional in Phase 1 so the app boots without them.
   ZOHO_CLIENT_ID: z.string().optional(),

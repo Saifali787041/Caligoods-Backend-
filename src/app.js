@@ -15,7 +15,7 @@ const { notFound, errorHandler } = require('./middleware/error.middleware');
 const app = express();
 
 app.set('trust proxy', 1);
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 // Gzip responses — big win for the large catalog JSON. Optional require so the
 // app still boots if the package isn't installed yet (run `npm install`).
 try { const compression = require('compression'); app.use(compression()); } catch (e) { /* optional */ }

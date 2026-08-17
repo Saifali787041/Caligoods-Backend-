@@ -38,6 +38,7 @@ const image = catchAsync(async (req, res) => {
     if (hit.missing) return res.status(404).end();
     res.set('Content-Type', hit.contentType);
     res.set('Cache-Control', 'public, max-age=86400');
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     return res.send(hit.data);
   }
   try {
@@ -46,6 +47,7 @@ const image = catchAsync(async (req, res) => {
     IMG_CACHE.set(id, { data, contentType, at: Date.now() });
     res.set('Content-Type', contentType);
     res.set('Cache-Control', 'public, max-age=86400');
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
     return res.send(data);
   } catch (e) {
     // Remember "no image" for a while so we don't re-hit Zoho for every load.

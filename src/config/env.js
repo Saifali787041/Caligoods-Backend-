@@ -70,6 +70,13 @@ const envSchema = z.object({
   }
 });
 
+// In LIVE_INVENTORY_ONLY mode the JWT secrets are never used (no auth), so
+// provide safe unused defaults instead of requiring them for deployment.
+if (String(process.env.LIVE_INVENTORY_ONLY || process.env.SKIP_DB || '').toLowerCase() === 'true') {
+  process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || `live_only_unused_${'a'.repeat(32)}`;
+  process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || `live_only_unused_${'b'.repeat(32)}`;
+}
+
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {
   // eslint-disable-next-line no-console

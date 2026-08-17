@@ -35,6 +35,7 @@ const image = catchAsync(async (req, res) => {
   const id = String(req.params.id);
   const hit = IMG_CACHE.get(id);
   if (hit && Date.now() - hit.at < IMG_TTL) {
+    if (hit.missing) return res.status(404).end();
     res.set('Content-Type', hit.contentType);
     res.set('Cache-Control', 'public, max-age=86400');
     return res.send(hit.data);
@@ -47,6 +48,9 @@ const image = catchAsync(async (req, res) => {
     res.set('Cache-Control', 'public, max-age=86400');
     return res.send(data);
   } catch (e) {
+    // Remember "no image" for a while so we don't re-hit Zoho for every load.
+    if (IMG_CACHE.size >= IMG_MAX) IMG_CACHE.delete(IMG_CACHE.keys().next().value);
+    IMG_CACHE.set(id, { missing: true, at: Date.now() });
     return res.status(404).end();
   }
 });

@@ -85,6 +85,18 @@ if (liveOnly) {
     : path.resolve(process.cwd(), env.DB_STORAGE);
   fs.mkdirSync(path.dirname(storage), { recursive: true });
 
+  try {
+    // eslint-disable-next-line global-require
+    require.resolve('sqlite3');
+  } catch (e) {
+    throw new Error(
+      'SQLite driver not installed. This project runs the live inventory with '
+      + 'LIVE_INVENTORY_ONLY=true (no database needed). To use the full app, either '
+      + 'set LIVE_INVENTORY_ONLY=true, or provide a DATABASE_URL (Postgres/MySQL), '
+      + 'or run `npm i sqlite3`.',
+    );
+  }
+
   sequelize = new Sequelize({
     dialect: 'sqlite',
     storage,

@@ -42,7 +42,6 @@
     "nodemon": "^3.1.4"
   },
   "optionalDependencies": {
-    "zcatalyst-sdk-node": "^1.11.0",
-    "sqlite3": "^6.0.1"
+    "zcatalyst-sdk-node": "^1.11.0"
   }
 }
